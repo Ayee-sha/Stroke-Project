@@ -39,7 +39,7 @@ TODO: The user needs to be able to choose what sheet number they want the data t
 
 The GraphMattressData.py file uses the pre-saved numpy arrays to create contour plots of the pressure distribution and stitches the plots in a animation. 
 
-TODO: The color bar for the pressure distribution is dynamic per frame, leading to subpar animation. A static value for the color bar needs to be setup. Instead of saving PNG images an animation needs to be setup instead that consumes less memory and storage.
+TODO: The color bar for the pressure distribution is dynamic per frame, leading to subpar animation. A static value for the color bar needs to be setup. Instead of saving PNG images an animation needs to be setup instead that consumes less memory and storage. The graphs are inverted along the width of the bed; i.e., the left most side of the bed s now the right most side. This needs to be changed so left right correspond to each other when graphing. This is not the case with the numpy arrays. 
 
 ## Analyze Data
 
