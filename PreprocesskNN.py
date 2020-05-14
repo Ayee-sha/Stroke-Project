@@ -38,6 +38,26 @@ from sklearn.neighbors import KNeighborsClassifier
 
 # Function to train the kNN
 def TrainNetwork(training_data, training_labels, k):
+    """
+    Trains a kNN to the training data wiht various number of neighbors
+
+    Parameters
+    ----------
+    training_data : ndarray
+        Array of the data that needs to be classified in the form
+        [samples][features].
+    training_labels : ndarray
+        Array containing the classifier labels for the training data.
+    k : intger
+        The number of nearest neighbors that should be considered by the model.
+
+    Returns
+    -------
+    kNN : sklearn.neighbors.KNeighborsClassfier
+        Trained kNN model.
+
+    """
+    
     kNN = KNeighborsClassifier()
     kNN.fit(training_data, training_labels)
     KNeighborsClassifier(n_neighbors=k)
@@ -47,22 +67,26 @@ def TrainNetwork(training_data, training_labels, k):
 # Function to test the trained model
 def TestNetwork(model, testing_data, testing_labels):
     """
-    
+    Uses a pretrained kNN to test against labeled data
 
     Parameters
     ----------
-    model : TYPE
-        DESCRIPTION.
-    testing_data : TYPE
-        DESCRIPTION.
-    testing_labels : TYPE
-        DESCRIPTION.
+    model : sklearn.neighbors.KNeighborsClassfier
+        Classfier object that has been pretrained using testing data.
+    testing_data : ndarray
+        Array of data that needs to be tested in form [samples][features].
+    testing_labels : ndarray
+        Array containig the actual labels for the test data.
 
     Returns
     -------
-    score : TYPE
-        DESCRIPTION.
+    score : float
+        Mean of the accuracy of the test classification.
 
     """
+    
     score = model.score(testing_data, testing_labels)
     return score
+
+
+# Function to split data in k-folds
