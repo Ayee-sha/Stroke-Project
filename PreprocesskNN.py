@@ -204,7 +204,10 @@ def PerformKFold(sample_data, sample_labels, splits, repeats, neighbors):
         score = TestNetwork(kNN, validation_data, validation_labels)
         scores[iteration] = score
     return scores
-    
+
+
+# Function to find the optimal value of neigbors
+
     
     
     
