@@ -90,3 +90,39 @@ def TestNetwork(model, testing_data, testing_labels):
 
 
 # Function to split data in k-folds
+def kfold(sample_data, sample_labels, k):
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
