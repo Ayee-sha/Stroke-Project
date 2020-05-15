@@ -34,6 +34,7 @@ Research k-fold training to understand how to do this
 
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import RepeatedKFold
 
 
 # Function to train the kNN
@@ -89,8 +90,35 @@ def TestNetwork(model, testing_data, testing_labels):
     return score
 
 
+# Determine Factors of number of data samples to split it evenly
+def Factorize(num):
+    """
+    Returns all the factors of a number excluding 1
+
+    Parameters
+    ----------
+    num : integer
+        Whole integer number for which factor must be found.
+
+    Returns
+    -------
+    factors : list
+        List containing interger factors of the input number.
+
+    """
+    
+    factors = []
+    for i in range(1, num+1):
+        if num%i == 0:
+            factors.append(i)
+    return factors
+
+
 # Function to split data in k-folds
-def kfold(sample_data, sample_labels, k):
+# Splits and repeats should be factors of the number of samples
+# Sample Data is all the data, sample labels are all the labels
+def PerformKFold(sample_data, sample_labels, splits, repeats):
+    
     
     
     
