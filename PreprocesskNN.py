@@ -40,7 +40,7 @@ from sklearn.model_selection import RepeatedKFold
 # Function to train the kNN
 def TrainNetwork(training_data, training_labels, k):
     """
-    Trains a kNN to the training data wiht various number of neighbors
+    Train a kNN to the training data wiht various number of neighbors.
 
     Parameters
     ----------
@@ -58,7 +58,6 @@ def TrainNetwork(training_data, training_labels, k):
         Trained kNN model.
 
     """
-    
     kNN = KNeighborsClassifier()
     kNN.fit(training_data, training_labels)
     KNeighborsClassifier(n_neighbors=k)
@@ -68,7 +67,7 @@ def TrainNetwork(training_data, training_labels, k):
 # Function to test the trained model
 def TestNetwork(model, testing_data, testing_labels):
     """
-    Uses a pretrained kNN to test against labeled data
+    Use a pretrained kNN to test against labeled data.
 
     Parameters
     ----------
@@ -85,7 +84,6 @@ def TestNetwork(model, testing_data, testing_labels):
         Mean of the accuracy of the test classification.
 
     """
-    
     score = model.score(testing_data, testing_labels)
     return score
 
@@ -93,7 +91,7 @@ def TestNetwork(model, testing_data, testing_labels):
 # Determine Factors of number of data samples to split it evenly
 def Factorize(num):
     """
-    Returns all the factors of a number excluding 1
+    Return all the factors of a number excluding 1.
 
     Parameters
     ----------
@@ -106,10 +104,9 @@ def Factorize(num):
         List containing interger factors of the input number.
 
     """
-    
     factors = []
     for i in range(1, num+1):
-        if num%i == 0:
+        if num % i == 0:
             factors.append(i)
     return factors
 
@@ -117,11 +114,96 @@ def Factorize(num):
 # Function to split data in k-folds
 # Splits and repeats should be factors of the number of samples
 # Sample Data is all the data, sample labels are all the labels
-def PerformKFold(sample_data, sample_labels, splits, repeats):
-    
-    
-    
-    
+def PerformKSplit(sample_data, splits, repeats):
+    """
+    Take input data and splits it into training and validation sets.
+
+    The function performs a repeated k-fold split that is randomized. Trainig
+    data contains n-1 groups of samples, and validation data contains 1 group
+    of samples. The number of samples in the group depends on the value of
+    splits. The number of times this process should be done is dictated by
+    value of repeats.
+
+    Parameters
+    ----------
+    sample_data : ndarray
+        Input data in the form [samples][features].
+    splits : integer
+        Number of splits that should be made.
+    repeats : integer
+        Number of times the process should be repeated.
+
+    Returns
+    -------
+    q : ndarray
+        Contains the index values for trainig data set for each iteration. The
+        form of the array is [iteration][indices].
+    w : ndarray
+        Contains the index values for validation data for each iteration. The
+        form of the array is [iteration][indices]
+
+    """
+    rkf = RepeatedKFold(n_splits=splits, n_repeats=repeats,
+                        random_state=2652124)
+    index = 0
+    # Assign q, number of rows is the the number of splits times the repeats
+    # The number of columns is total number of samples minus on group
+    # sample_labels.shape[0] provides the total number of samples
+    # dividing the total number of samples by splits gives the number of
+    # samples in each group
+    # Training set 'q' will have n-1 groups
+    # Testing set 'w' will have 1 group
+    rows = int(splits*repeats)
+    test_cols = int(sample_data.shape[0]/splits)
+    train_cols = int(sample_data.shape[0]-test_cols)
+    q = np.zeros((rows, train_cols))
+    w = np.zeros((rows, test_cols))
+    for train_index, test_index in rkf.split(sample_data):
+        q[index] = train_index
+        w[index] = test_index
+        index += 1
+    return q, w
+
+
+# Function to perform k-fold cross validaton
+def PerformKFold(sample_data, sample_labels, splits, repeats, neighbors):
+    """
+    Perform kNN classification using k-fold cross validation.
+
+    Parameters
+    ----------
+    sample_data : ndarray
+        Input data in form of [samples][features].
+    sample_labels : ndarray
+        Desired classifier output in form [samples][label].
+    splits : integer
+        Number of splits that should be made in the sample data.
+    repeats : integer
+        Number of times the splits should be repeated.
+    neighbors : int
+        Number of neighbours that should be taken into consideration for kNN
+        classification.
+
+    Returns
+    -------
+    scores : ndarray
+        Array of average score values for each iteration.
+
+    """
+    # First need to split the data into k repititions
+    train_index, val_index = PerformKFold(sample_data, splits, repeats)
+    scores = np.zeros(val_index.shape[0])
+    for iteration in range(train_index.shape[0]):
+        # Train the network
+        training_data = sample_data[train_index]
+        validation_data = sample_data[val_index]
+        training_labels = sample_labels[train_index]
+        validation_labels = sample_labels[val_index]
+        kNN = TrainNetwork(training_data, training_labels, neighbors)
+        # Test the network
+        score = TestNetwork(kNN, validation_data, validation_labels)
+        scores[iteration] = score
+    return scores
     
     
     
