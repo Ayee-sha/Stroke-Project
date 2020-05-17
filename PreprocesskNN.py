@@ -35,6 +35,7 @@ Research k-fold training to understand how to do this
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import RepeatedKFold
+from sklearn.model_selection import GridSearchCV
 
 
 # Function to train the kNN
@@ -207,7 +208,42 @@ def PerformKFold(sample_data, sample_labels, splits, repeats, neighbors):
 
 
 # Function to find the optimal value of neigbors
+def OptimalNeighbors(sample_data, sample_labels, n_neighbors):
+    """
+    Find the optimal value of nearest neighbors to use in algorithm.
 
+    Parameters
+    ----------
+    sample_data : ndarray
+        Input data in form of [samples][features].
+    sample_labels : ndarray
+        Desired output labels in form of [samples][label].
+    n_neighbors : ndarray
+        Integer array containing the values of neigbors to be evaluated.
+
+    Returns
+    -------
+    ebst_neighbour : dict
+        Parameter setting that gave the best resutls on the hold out data.
+
+    """
+    # Create a new kNN model
+    knn = KNeighborsClassifier()
+    # Create a dictionary of all values to test for n_neighbors
+    param_grid = {'n_neighbors': n_neighbors}
+    # Use gridsearch to test all values for n_neighbors
+    knn_gscv = GridSearchCV(knn, param_grid, cv=5)
+    # fit model to data
+    knn_gscv.fit(sample_data, sample_data)
+    # check top performing n_neighbor value
+    best_neighbor = knn_gscv.best_params_
+    return best_neighbor
+
+
+
+    
+    
+    
     
     
     
