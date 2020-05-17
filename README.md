@@ -52,3 +52,13 @@ COP.py and AnalyzeMatData.py are two files attempting to start feature extractio
 Principle component analysis serves to reduce the dimensionality of data to speed up calculation during classification. The PCA.py file performs PCA on a numpy array. The number of PCA components can be chosen. 
 
 TODO: Determine the best value of PCA components without sacrificing accuracy of the classification system.
+
+## Posture Classification
+
+### kNN
+
+The first part of the process is to clean the data so only frames with patients in supinated posture are considered. One method to accomplish this is by training a k-nearest neighbor algorithm to identify and classify pronated posture frames. The algorithm uses manually labelled data from all patients and combines into one array. This array is then split into a training set and testing set. The training set goes through a k-fold cross validation. The parameters are then tested on the testing set to evaluate the accuracy of the model. The model will be re-tested with PCA performed on the labelled data 
+
+### SVM
+
+In addition to kNN classification an SVM classification will also be used
