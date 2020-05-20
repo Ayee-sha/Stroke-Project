@@ -36,6 +36,7 @@ import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import RepeatedKFold
 from sklearn.model_selection import GridSearchCV
+from sklearn import svm
 
 
 # Function to train the kNN
@@ -167,7 +168,7 @@ def PerformKSplit(sample_data, splits, repeats):
 
 
 # Function to perform k-fold cross validaton
-def PerformKFold(sample_data, sample_labels, splits, repeats, neighbors):
+def PerformKFoldkNN(sample_data, sample_labels, splits, repeats, neighbors):
     """
     Perform kNN classification using k-fold cross validation.
 
@@ -192,7 +193,7 @@ def PerformKFold(sample_data, sample_labels, splits, repeats, neighbors):
 
     """
     # First need to split the data into k repititions
-    train_index, val_index = PerformKFold(sample_data, splits, repeats)
+    train_index, val_index = PerformKSplit(sample_data, splits, repeats)
     scores = np.zeros(val_index.shape[0])
     for iteration in range(train_index.shape[0]):
         # Train the network
@@ -240,7 +241,35 @@ def OptimalNeighbors(sample_data, sample_labels, n_neighbors):
     return best_neighbor
 
 
+# Function to train SVM non-linear SVC
+def TrainSVC(training_data, training_labels):
+    """
+    Train non-linear SVC SVM.
 
+    Parameters
+    ----------
+    training_data : ndarray
+        Input data in form of [samples][features].
+    training_labels : ndarray
+        Desired output labels in form of [samples][label].
+
+    Returns
+    -------
+    clf : C-Support Vector Classification Model
+        SVM class object with trained parameters.
+
+    """
+    # Define classfier
+    clf = svm.SVC()
+    # Fit the model to the data
+    clf.fit(training_data, training_labels)
+    # Return the model
+    return clf
+
+
+# Function to test SVM model
+def TestSVC(testing_data, testing_labels, model):
+    
 
 
 
