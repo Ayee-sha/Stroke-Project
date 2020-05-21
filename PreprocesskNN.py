@@ -38,6 +38,78 @@ from sklearn.model_selection import RepeatedKFold
 from sklearn.model_selection import GridSearchCV
 from sklearn import svm
 
+FRAMES = []
+CLASSES = []
+
+TESTING_FRAMES = []
+TESTING_CLASSES = []
+
+
+
+
+def ReadData(file_name):
+    frames = []   
+    classes = []
+
+'''
+Function which opens the data and reads each element
+    Any labelled data is saved in an array called classes
+        Frames with the above data are saved in an array called frames
+
+'''
+
+    for line in open(file_name): 
+        
+        cols = list(map(str.rstrip, line.split(',')))
+    
+        if(cols[0].isdigit() and cols[1].isdigit()):
+            frames.append(cols[0])
+            classes.append(cols[1])
+    
+    return frames, classes
+
+    
+def PopulateTestingLists(frames, classes):
+    ''' Function that populates the Testing list from files 616 and 256
+    '''
+    TESTING_FRAMES.extend(frames)
+    TESTING_CLASSES.extend(classes)
+    
+def PopulateTrainingValidationLists(frames, classes):
+    ''' 
+    Function that populates the lists from remaining files
+    List contains both validation and training data
+    '''
+    FRAMES.extend(frames)
+    CLASSES.extend(classes)
+
+def ReadTestingData(file_name):
+    '''Reading data from Testing'''
+    frames, classes = ReadData(file_name)
+    PopulateTestingLists(frames, classes)
+        
+def ReadTrainingAndValidationData(file_name):
+    frames, classes = ReadData(file_name)
+    PopulateTrainingValidationLists(frames, classes)
+
+def main():
+    ''' Reads from folder Testing to obtain files 616 and 256
+        Reads from folder TrainingValidation to obtain files the rest of the files
+        
+    '''
+    testing_files = os.listdir('./Testing')
+    training_validation_files = os.listdir('./TrainingValidation')
+    
+    for file in testing_files:
+        ReadTestingData('./Testing/' + file)
+        
+    for file in training_validation_files:
+        ReadTrainingAndValidationData('./TrainingValidation/' + file)
+        
+    classes_numpy = numpy.array(CLASSES)
+
+main()
+
 
 # Function to train the kNN
 def TrainNetwork(training_data, training_labels, k):
